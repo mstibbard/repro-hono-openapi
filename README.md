@@ -1,21 +1,22 @@
-```txt
-npm install
-npm run dev
-```
+# Reproduction for hono-openapi
 
-```txt
-npm run deploy
-```
+## Setup
 
-[For generating/synchronizing types based on your Worker configuration run](https://developers.cloudflare.com/workers/wrangler/commands/#types):
+1. Clone repo
+2. Install deps
 
-```txt
-npm run cf-typegen
-```
+## Issue 1 - Cloudflare Workers/Wrangler errors
 
-Pass the `CloudflareBindings` as generics when instantiation `Hono`:
+Run `bun dev-wrangler` to view errors
 
-```ts
-// src/index.ts
-const app = new Hono<{ Bindings: CloudflareBindings }>()
-```
+## Issue 2 - Generated OpenAPI Components Schemas behaviour
+
+1. Run `bun dev` (works)
+2. Visit localhost:3000/#models or localhost:3000/openapi (and view the components.schemas). 
+
+If working correctly you should see 3 models/schemas: 
+- ErrorResponse
+- User (broken, does not appear)
+- Product
+
+I'm guessing it's something to do with the reusable ErrorResponse schema -- if you simply remove the ref definition for ErrorResponse the others all appear correctly. It's always the first route in src/index.ts which does not appear.
